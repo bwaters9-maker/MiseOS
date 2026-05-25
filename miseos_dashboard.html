@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiseOS - Operational & Culinary Intelligence</title>
+    <!-- Google Fonts: Montserrat for clean, high-performance typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS for modern layouts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            DEFAULT: '#0A2342',
+                            dark: '#051222',
+                            light: '#112D52'
+                        },
+                        teal: {
+                            DEFAULT: '#1BB5A0',
+                            dark: '#148C7B',
+                            light: '#35D2BC'
+                        },
+                        slateCanvas: '#060B11',
+                        slateCard: '#0E1724',
+                        slateBorder: '#1A293D'
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar styling for a premium aesthetic */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #060B11;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1A293D;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1BB5A0;
+        }
+    </style>
+</head>
+<body class="bg-slateCanvas text-gray-100 min-h-screen font-sans antialiased overflow-x-hidden">
+
+    <!-- Top Navigation Bar -->
+    <header class="border-b border-slateBorder bg-slateCard/95 backdrop-blur sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-6">
+            <!-- Typographic Minimalist Logo -->
+            <div class="flex flex-col">
+                <div class="flex items-center space-x-1.5">
+                    <span class="text-2xl font-bold text-white tracking-tight">Mise<span class="text-teal">OS</span></span>
+                    <span class="h-2 w-2 rounded-full bg-teal animate-pulse mt-3"></span>
+                </div>
+                <span class="text-[9px] text-teal tracking-[0.25em] uppercase font-medium mt-0.5">Order. Flow. Balance. Elevation.</span>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-2 px-4 py-1.5 bg-navy-dark/80 rounded-full border border-slateBorder text-xs">
+                <span class="h-1.5 w-1.5 rounded-full bg-teal"></span>
+                <span class="text-gray-400">System Mode: </span>
+                <span class="text-gray-200 font-semibold ml-1">Frictionless Balance Standard</span>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <!-- Universal Target Food Cost Goal Toggle -->
+            <div class="flex items-center space-x-2 bg-navy-dark/60 px-3 py-2 rounded-lg border border-slateBorder text-xs">
+                <span class="text-gray-400">Target Margin Goal:</span>
+                <npm install -g tsx id="targetCostPct" type="number" value="28" class="w-8 bg-transparent text-teal font-bold focus:outline-none text-right" oninput="calculateRecipeCost()">
+                <span class="text-teal font-bold">%</span>
+            </div>
+
+            <!-- Sync Button Offer -->
+            <button onclick="toggleCloudSyncModal()" class="flex items-center space-x-1.5 bg-teal hover:bg-teal-light text-slateCanvas font-semibold text-xs px-4 py-2 rounded-lg transition-colors duration-200 shadow-md">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
+                <span>Sync Kitchen Cloud</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main class="p-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- Left Column: The Interactive R&D Sandbox & Real-time Cost Spec (7/12 Width) -->
+        <section class="lg:col-span-7 flex flex-col space-y-6">
+            
+            <!-- Dashboard Card: Active Sandbox -->
+            <div class="bg-slateCard border border-slateBorder rounded-xl overflow-hidden shadow-xl flex flex-col h-[680px]">
+                
+                <!-- Card Header -->
+                <div class="p-4 bg-navy-dark/40 border-b border-slateBorder flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2 bg-teal/10 rounded-lg text-teal">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        </div>
+                        <div>
+                            <h2 class="text-sm font-bold text-white tracking-wide">Culinary R&D Workspace</h2>
+                            <p class="text-[11px] text-gray-400">Write specs naturally using multiple weights, fractions, and units.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        <button onclick="loadDemoRecipe('duck')" class="text-[10px] bg-navy-light/40 hover:bg-navy-light border border-slateBorder px-2.5 py-1.5 rounded text-gray-300 transition-colors">Duck Confit</button>
+                        <button onclick="loadDemoRecipe('veal')" class="text-[10px] bg-navy-light/40 hover:bg-navy-light border border-slateBorder px-2.5 py-1.5 rounded text-gray-300 transition-colors font-semibold border-teal/40 text-teal">Veal & Morels</button>
+                        <button onclick="clearRecipeEditor()" class="text-[10px] bg-red-950/20 hover:bg-red-900/30 border border-red-900/40 px-2 py-1.5 rounded text-red-400 transition-colors">Clear</button>
+                    </div>
+                </div>
+
+                <!-- Live Editor Split Workspace -->
+                <div class="grid grid-cols-1 md:grid-cols-2 flex-grow overflow-hidden">
+                    
+                    <!-- Writing Canvas (Interactive Text Area) -->
+                    <div class="border-r border-slateBorder flex flex-col h-full bg-slateCanvas/20">
+                        <div class="p-3 bg-navy-dark/20 border-b border-slateBorder text-[10px] font-semibold text-gray-400 uppercase tracking-wider flex justify-between">
+                            <span>Markdown Editor</span>
+                            <span class="text-teal">Type weights / volume inline</span>
+                        </div>
+                        <textarea id="recipeEditor" 
+                                  class="w-full flex-grow p-4 bg-transparent text-gray-200 font-mono text-xs leading-relaxed focus:outline-none resize-none"
+                                  placeholder="Example:\n3 lbs veal tenderloin\n2 bunches ramps\n1 cup heavy cream\n1.5 lbs morel mushrooms\n\nMethod:\n1. Prepare the ramps...\n2. Sear veal..."
+                                  oninput="onRecipeEditorInput()"></textarea>
+                    </div>
+
+                    <!-- Computed Cost Workspace (Real-time Parse Output) -->
+                    <div class="flex flex-col h-full bg-navy-dark/10">
+                        <div class="p-3 bg-navy-dark/20 border-b border-slateBorder text-[10px] font-semibold text-gray-400 uppercase tracking-wider flex justify-between">
+                            <span>Computed Spec Sheet</span>
+                            <span class="text-teal" id="lastParsedTime">Real-time Sync</span>
+                        </div>
+                        
+                        <!-- Recipe Calculation Yield Display -->
+                        <div id="specItemsList" class="p-4 space-y-3 overflow-y-auto flex-grow text-xs">
+                            <!-- Populated dynamically via javascript parser -->
+                            <div class="text-center text-gray-500 mt-10 italic">
+                                Type your recipe details on the left to initialize live conversions.
+                            </div>
+                        </div>
+
+                        <!-- Mini Cost Summary Banner inside Workspace -->
+                        <div class="p-4 border-t border-slateBorder bg-slateCard">
+                            <div class="flex justify-between items-center text-xs mb-1">
+                                <span class="text-gray-400">Raw Cost:</span>
+                                <span class="font-bold text-white" id="rawTotalCost">$0.00</span>
+                            </div>
+                            <div class="flex justify-between items-center text-xs mb-1.5">
+                                <span class="text-gray-400">Yield Adjusted Total:</span>
+                                <span class="font-bold text-teal" id="yieldAdjustedCost">$0.00</span>
+                            </div>
+                            <div class="border-t border-slateBorder/60 my-2"></div>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <span class="text-[10px] text-gray-400 block uppercase tracking-wider">Suggested Plate price</span>
+                                    <span class="text-lg font-bold text-white" id="suggestedPlatePrice">$0.00</span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[10px] text-gray-400 block uppercase tracking-wider">Simulated Food Cost</span>
+                                    <span class="text-xs px-2.5 py-0.5 rounded bg-teal/10 text-teal font-bold" id="calculatedFoodCostPct">0.0%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Right Column: Balance Meter, AI Assistant & Smart Signals (5/12 Width) -->
+        <section class="lg:col-span-5 flex flex-col space-y-6">
+            
+            <!-- Dynamic Operational Balance Meter -->
+            <div id="balanceContainer" class="bg-slateCard border border-slateBorder rounded-xl p-4 shadow-md transition-all duration-300">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-2">
+                        <div class="p-1.5 rounded bg-teal/10 text-teal" id="balanceIconContainer">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h3 class="text-xs font-bold text-white uppercase tracking-wider" id="balanceTitle">Recipe Balance Matrix</h3>
+                    </div>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-light/40 text-gray-300" id="balanceBadge">Checking</span>
+                </div>
+                
+                <div class="space-y-3">
+                    <!-- Progress Bar Scale -->
+                    <div class="w-full bg-slateCanvas rounded-full h-2.5 overflow-hidden">
+                        <div id="balanceProgress" class="bg-teal h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                    
+                    <div class="flex justify-between text-[10px] text-gray-400">
+                        <span>High Cost Risk</span>
+                        <span class="text-center font-semibold" id="balanceStatusText">Waiting for recipe items</span>
+                        <span>Optimized Balance</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Smart Marks & Signals Panel -->
+            <div class="bg-slateCard border border-slateBorder rounded-xl p-4 shadow-md">
+                <div class="flex items-center justify-between mb-3 border-b border-slateBorder/60 pb-2">
+                    <div class="flex items-center space-x-2">
+                        <span class="h-2 w-2 rounded-full bg-teal animate-pulse"></span>
+                        <h3 class="text-xs font-bold text-white uppercase tracking-wider">Smart Marks & Price Signals</h3>
+                    </div>
+                    <span class="text-[10px] text-gray-400">Active Market Feeds</span>
+                </div>
+                
+                <div class="space-y-2.5">
+                    <!-- Price Spike Alert -->
+                    <div class="p-3 bg-red-950/20 border border-red-900/40 rounded-lg flex items-start space-x-3 cursor-pointer hover:bg-red-950/30 transition-all" onclick="highlightIngredientInRecipe('veal')">
+                        <div class="p-1.5 bg-red-500/10 text-red-400 rounded-md">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        </div>
+                        <div class="text-xs flex-grow">
+                            <div class="flex justify-between">
+                                <span class="font-bold text-red-200">Price Spike Alert: Veal Tenderloin</span>
+                                <span class="text-[10px] text-red-400 font-mono font-bold">+14%</span>
+                            </div>
+                            <p class="text-gray-400 text-[10px] mt-0.5">Average broadline cost spiked to $18.50/lb. Click to identify impact.</p>
+                        </div>
+                    </div>
+
+                    <!-- Peak Season Alert -->
+                    <div class="p-3 bg-emerald-950/20 border border-emerald-900/40 rounded-lg flex items-start space-x-3 cursor-pointer hover:bg-emerald-950/30 transition-all" onclick="addIngredientToRecipe('ramps')">
+                        <div class="p-1.5 bg-emerald-500/10 text-emerald-400 rounded-md">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                        </div>
+                        <div class="text-xs flex-grow">
+                            <div class="flex justify-between">
+                                <span class="font-bold text-emerald-200">Peak Season: Local Ramps</span>
+                                <span class="text-[10px] text-emerald-400 font-bold uppercase">Optimal Price</span>
+                            </div>
+                            <p class="text-gray-400 text-[10px] mt-0.5">Peak local harvesting (New York State). Tap to inject into recipe sandbox.</p>
+                        </div>
+                    </div>
+
+                    <!-- Market Trend Indicator -->
+                    <div class="p-3 bg-teal/5 border border-slateBorder rounded-lg flex items-start space-x-3 cursor-pointer hover:bg-teal/10 transition-all" onclick="addIngredientToRecipe('morels')">
+                        <div class="p-1.5 bg-teal/10 text-teal rounded-md">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        </div>
+                        <div class="text-xs flex-grow">
+                            <div class="flex justify-between">
+                                <span class="font-bold text-teal-200">High Demand: Morel Mushrooms</span>
+                                <span class="text-[10px] text-teal font-mono font-bold">+22% Search</span>
+                            </div>
+                            <p class="text-gray-400 text-[10px] mt-0.5">Strong trending menu inclusion. Tap to test R&D composition options.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Sous Chef Chat System (Real Gemini Connection) -->
+            <div class="bg-slateCard border border-slateBorder rounded-xl overflow-hidden shadow-xl flex flex-col h-[410px]">
+                
+                <!-- Chat Header -->
+                <div class="p-4 bg-navy-dark/40 border-b border-slateBorder flex items-center justify-between">
+                    <div class="flex items-center space-x-2.5">
+                        <div class="p-1.5 bg-teal/15 rounded-lg text-teal">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold text-white tracking-wide uppercase">AI Sous-Chef Feedback</h3>
+                            <p class="text-[9px] text-gray-400">Professional R&D sandbox & flavor profiling</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                        <span class="text-[9px] text-gray-400 font-mono font-semibold">Gemini 2.5 Active</span>
+                    </div>
+                </div>
+
+                <!-- Chat Messages Feed -->
+                <div id="chatMessages" class="flex-grow p-4 space-y-4 overflow-y-auto text-xs bg-slateCanvas/10">
+                    <div class="flex space-x-2 items-start">
+                        <div class="h-6 w-6 rounded-full bg-teal/15 text-teal flex items-center justify-center text-[9px] font-bold flex-shrink-0">
+                            AI
+                        </div>
+                        <div class="bg-navy-light/20 p-3 rounded-lg border border-slateBorder text-gray-300 max-w-[85%]">
+                            <p class="font-semibold text-white mb-1">MiseOS AI Sous-Chef</p>
+                            Bonjour Chef. I've initialized your active workspace. I see we are working with Ramps and Veal Tenderloin. 
+                            <br><br>Would you like me to analyze your ingredient balance, check seasonality logic, or suggest high-margin menu optimizations for this combination?
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Input Frame -->
+                <div class="p-3 border-t border-slateBorder bg-slateCard flex items-center space-x-2">
+                    <input id="chatInput" 
+                           type="text" 
+                           placeholder="Ask AI Sous-Chef to balance this recipe..." 
+                           class="flex-grow bg-slateCanvas border border-slateBorder text-xs rounded-lg px-3 py-2 text-gray-200 focus:outline-none focus:border-teal"
+                           onkeydown="if(event.key === 'Enter') sendChatMessage()">
+                    <button onclick="sendChatMessage()" class="bg-teal hover:bg-teal-dark text-slateCanvas font-bold p-2 rounded-lg transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Drawer Section: Universal Kitchen Pantry Configurator -->
+    <section class="max-w-7xl mx-auto px-6 pb-12 mt-6">
+        <div class="bg-slateCard border border-slateBorder rounded-xl p-5 shadow-lg">
+            <div class="flex items-center justify-between border-b border-slateBorder/60 pb-3 mb-4">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-navy-light/40 border border-slateBorder rounded-lg text-teal">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white tracking-wide uppercase">Universal Kitchen Pantry Manager</h3>
+                        <p class="text-xs text-gray-400">Adjust active market unit costs, standard yields, and trigger instant system recalculations.</p>
+                    </div>
+                </div>
+                <button onclick="addNewPantryItemRow()" class="text-xs bg-teal/10 text-teal hover:bg-teal/20 px-3 py-1.5 rounded-lg border border-teal/20 font-semibold transition-all">+ Add Ingredient</button>
+            </div>
+
+            <!-- Pantry Table -->
+            <div class="overflow-x-auto text-xs">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-slateBorder text-gray-400 font-semibold">
+                            <th class="pb-2">Ingredient Key (Fuzzy Code)</th>
+                            <th class="pb-2">Base Cost / Unit</th>
+                            <th class="pb-2">Base Unit</th>
+                            <th class="pb-2">Yield Factor</th>
+                            <th class="pb-2">Standard Brand/Source</th>
+                            <th class="pb-2 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pantryTableBody">
+                        <!-- Populated dynamically via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cloud Sync Modal (Mockup overlay) -->
+    <div id="cloudSyncModal" class="fixed inset-0 bg-slateCanvas/80 backdrop-blur-sm flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-slateCard border border-slateBorder rounded-xl max-w-md w-full p-6 shadow-2xl relative">
+            <button onclick="toggleCloudSyncModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <div class="text-center">
+                <div class="mx-auto w-12 h-12 bg-teal/15 text-teal rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">Connect MiseOS Kitchen Sync</h3>
+                <p class="text-xs text-gray-400 leading-relaxed mb-6">
+                    Connect this device directly to our secure Azure Firestore ecosystem to share active specs, smart price-marks, and AI prompts with your line chefs, sous chefs, and vendors in real time.
+                </p>
+                
+                <div class="space-y-3 text-left">
+                    <div class="p-3 bg-navy-dark/40 rounded-lg border border-slateBorder text-xs flex justify-between">
+                        <span class="text-gray-400">Local Kitchen Spec:</span>
+                        <span class="text-teal font-semibold font-mono">Cheektowaga-BOH-01</span>
+                    </div>
+                    <div class="p-3 bg-navy-dark/40 rounded-lg border border-slateBorder text-xs flex justify-between">
+                        <span class="text-gray-400">Total Recipes Ready:</span>
+                        <span class="text-white font-semibold">1 Active R&D Space</span>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex space-x-3">
+                    <button onclick="toggleCloudSyncModal()" class="flex-grow bg-slateCanvas hover:bg-navy-dark text-gray-300 font-semibold text-xs py-2.5 rounded-lg border border-slateBorder transition-all">
+                        Cancel
+                    </button>
+                    <button onclick="triggerCloudSync()" class="flex-grow bg-teal hover:bg-teal-dark text-slateCanvas font-bold text-xs py-2.5 rounded-lg transition-all shadow-md">
+                        Activate Sync
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Javascript Code: Conversion Parser, Food Cost Engine & Gemini Connection -->
+    <script>// This is the internet address where your Render Web Service container is running
+const BACKEND_API_URL = "https://your-backend-service.onrender.com"; 
+
+/**
+ * BRIAN: This function triggers when someone clicks "Sync Kitchen Cloud" on the screen.
+ * It packages up what the chef typed and ships it over the internet to your backend container!
+ */
+async function syncDashboar
+dToCloud() {
+    // 1. Grab the text typed inside the Markdown Editor on the screen
+    const rawText = document.getElementById('recipeEditor').value;
+    const suggestedPrice = document.getElementById('suggestedPlatePrice').innerText;
+
+    // 2. Package up the data cleanly
+    const payload = {
+        kitchenId: "Cheektowaga-BOH-01", // The partition key separating our kitchens
+        recipeId: "recipe_veal_morels_001",
+        name: "Veal Medallions with Spring Morels & Ramps",
+        rawMarkdownText: rawText,
+        price: suggestedPrice
+    };
+
+    try {
+        // 3. Send a secure message over the internet to your backend container
+        const response = await fetch(`${BACKEND_API_URL}/api/recipes`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            alert("🎉 Recipe synced successfully to your Cosmos DB Container!");
+        } else {
+            alert("❌ The backend container received it, but failed to save.");
+        }
+    } catch (error) {
+        console.error("Connection failed:", error);
+        alert("❌ Could not reach your backend container server.")
+        // Global State & Configuration
+        const apiKey = ""; // Set empty string as mandated; runtime provides authorization
+        let modelCallRetryDelay = 1000;
+
+        // Base universal pantry database
+        let pantry = {
+            'veal': { name: 'Veal Tenderloin', cost: 18.50, unit: 'lb', yield: 0.85, source: 'Sysco / US Foods' },
+            'ramps': { name: 'Fresh Ramps', cost: 12.00, unit: 'bunch', yield: 0.90, source: 'Local NY Farm' },
+            'cream': { name: 'Heavy Cream', cost: 4.50, unit: 'cup', yield: 1.00, source: 'Dairy Farmers of NY' },
+            'morels': { name: 'Morel Mushrooms', cost: 28.00, unit: 'lb', yield: 0.95, source: 'Foraged Specialties' },
+            'onion': { name: 'Yellow Onion (Diced)', cost: 0.80, unit: 'lb', yield: 0.88, source: 'Broadline Produce' },
+            'thyme': { name: 'Fresh Thyme', cost: 6.00, unit: 'bunch', yield: 0.80, source: 'Produce Corp' },
+            'garlic': { name: 'Garlic Head', cost: 1.50, unit: 'piece', yield: 0.90, source: 'Broadline Produce' },
+            'butter': { name: 'Unsalted Butter', cost: 3.20, unit: 'lb', yield: 1.00, source: 'Dairy Co' },
+            'duck': { name: 'Duck Legs (Whole)', cost: 7.50, unit: 'lb', yield: 0.70, source: 'Hudson Valley Duck' }
+        };
+
+        // Standard Unit Conversion Equivalencies (to support inline parsing of random inputs)
+        // Everything maps down to standard base units (lb, bunch, cup, piece, g) for standard mathematical ease
+        const unitConversions = {
+            'lb': { 'lb': 1, 'oz': 0.0625, 'g': 0.00220462 },
+            'bunch': { 'bunch': 1, 'bunches': 1 },
+            'cup': { 'cup': 1, 'cups': 1, 'ml': 0.00422675, 'tbsp': 0.0625, 'tsp': 0.0208333 },
+            'piece': { 'piece': 1, 'pieces': 1, 'each': 1 }
+        };
+
+        const demoRecipes = {
+            veal: `3 lbs veal\n2 bunches ramps\n1 cup cream\n1.5 lbs morels\n1 piece garlic\n2 tbsp butter\n\nMethod:\n1. Prepare the ramps by trimming the roots, separating the green leaves from the white bulbs.\n2. In a heavy sauté pan, heat the butter and sauté sliced morels and minced garlic.\n3. Pan-sear the veal medallions to medium-rare. Deglaze the pan with cream and reduce to perfect sauce consistency.\n4. Fold in ramp leaves at the very end to wilt cleanly. Serve immediately.`,
+            duck: `4 lbs duck\n2 bunches thyme\n2 pieces garlic\n1 lb butter\n\nMethod:\n1. Score duck leg skin and cure with kosher salt overnight.\n2. Confit slowly in rendered duck fat or clarified butter at 225°F with thyme and crushed garlic for 3 hours until completely tender.`
+        };
+
+        // Initialize App on Page Load
+        window.onload = function() {
+            renderPantryTable();
+            loadDemoRecipe('veal');
+        };
+
+        // Helper: Format currency
+        function formatCurrency(val) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
+        }
+
+        // Render the Editable Universal Pantry Table
+        function renderPantryTable() {
+            const tbody = document.getElementById('pantryTableBody');
+            tbody.innerHTML = '';
+            
+            Object.keys(pantry).forEach(key => {
+                const item = pantry[key];
+                const row = document.createElement('tr');
+                row.className = 'border-b border-slateBorder/60 hover:bg-navy-dark/20 text-xs transition-colors';
+                row.innerHTML = `
+                    <td class="py-2.5 font-mono text-teal font-semibold">${key}</td>
+                    <td class="py-2.5">
+                        <input type="number" step="0.01" value="${item.cost}" class="bg-slateCanvas border border-slateBorder rounded px-2 py-1 w-20 text-white font-mono" onchange="updatePantryItemCost('${key}', this.value)">
+                    </td>
+                    <td class="py-2.5">
+                        <select class="bg-slateCanvas border border-slateBorder rounded px-2 py-1 text-gray-300" onchange="updatePantryItemUnit('${key}', this.value)">
+                            <option value="lb" ${item.unit === 'lb' ? 'selected' : ''}>lb</option>
+                            <option value="bunch" ${item.unit === 'bunch' ? 'selected' : ''}>bunch</option>
+                            <option value="cup" ${item.unit === 'cup' ? 'selected' : ''}>cup</option>
+                            <option value="piece" ${item.unit === 'piece' ? 'selected' : ''}>piece</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5">
+                        <input type="number" step="0.01" max="1" min="0.01" value="${item.yield}" class="bg-slateCanvas border border-slateBorder rounded px-2 py-1 w-16 text-white font-mono" onchange="updatePantryItemYield('${key}', this.value)">
+                    </td>
+                    <td class="py-2.5 text-gray-400">${item.source}</td>
+                    <td class="py-2.5 text-right">
+                        <button onclick="removePantryItem('${key}')" class="text-red-400 hover:text-red-300 font-semibold px-2 py-1">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Pantry Mutations to Trigger Instant Workspace Refresh
+        function updatePantryItemCost(key, val) {
+            pantry[key].cost = parseFloat(val) || 0;
+            calculateRecipeCost();
+        }
+
+        // Update units of items
+        function updatePantryItemUnit(key, val) {
+            pantry[key].unit = val;
+            calculateRecipeCost();
+        }
+
+        // Update yields of items
+        function updatePantryItemYield(key, val) {
+            pantry[key].yield = Math.min(1, Math.max(0.01, parseFloat(val))) || 1;
+            calculateRecipeCost();
+        }
+
+        // Delete items
+        function removePantryItem(key) {
+            delete pantry[key];
+            renderPantryTable();
+            calculateRecipeCost();
+        }
+
+        // Add a brand new item with system re-renders
+        function addNewPantryItemRow() {
+            const randomKey = 'ingredient' + Math.floor(Math.random() * 100);
+            pantry[randomKey] = { name: 'New Ingredient', cost: 5.00, unit: 'lb', yield: 1.00, source: 'Specialty Source' };
+            renderPantryTable();
+            calculateRecipeCost();
+        }
+
+        // Load Recipe Demos
+        function loadDemoRecipe(type) {
+            document.getElementById('recipeEditor').value = demoRecipes[type];
+            calculateRecipeCost();
+        }
+
+        function clearRecipeEditor() {
+            document.getElementById('recipeEditor').value = '';
+            calculateRecipeCost();
+        }
+
+        // Highlight/Inject Actions from Smart Marks
+        function highlightIngredientInRecipe(ingredientKey) {
+            const textarea = document.getElementById('recipeEditor');
+            const content = textarea.value;
+            const regex = new RegExp(`(${ingredientKey})`, 'gi');
+            
+            if (regex.test(content)) {
+                textarea.focus();
+                const index = content.toLowerCase().indexOf(ingredientKey);
+                if (index !== -1) {
+                    textarea.setSelectionRange(index, index + ingredientKey.length);
+                }
+                appendSystemChatMessage(`System highlighted '${ingredientKey}' in your active sandbox. Note the live cost spike variance.`);
+            } else {
+                appendSystemChatMessage(`Ingredient '${ingredientKey}' is not currently in your active sandbox recipe.`);
+            }
+        }
+
+        function addIngredientToRecipe(ingredientKey) {
+            const textarea = document.getElementById('recipeEditor');
+            const lines = textarea.value.split('\n');
+            
+            lines.unshift(`1 ${pantry[ingredientKey]?.unit || 'lb'} ${ingredientKey}`);
+            textarea.value = lines.join('\n');
+            
+            calculateRecipeCost();
+            appendSystemChatMessage(`Successfully injected active market signal item: '1 ${pantry[ingredientKey]?.unit} ${ingredientKey}' into your recipe list.`);
+        }
+
+        // Throttled input
+        let parseThrottle;
+        function onRecipeEditorInput() {
+            clearTimeout(parseThrottle);
+            parseThrottle = setTimeout(() => {
+                calculateRecipeCost();
+            }, 150);
+        }
+
+        // Fraction and Mixed Fraction Parsing Support (e.g. "1 1/2", "3/4", "1.5")
+        function parseFraction(str) {
+            str = str.trim();
+            if (str.includes(' ')) {
+                const parts = str.split(' ');
+                let whole = parseFloat(parts[0]) || 0;
+                let fraction = 0;
+                if (parts[1] && parts[1].includes('/')) {
+                    const fracParts = parts[1].split('/');
+                    fraction = (parseFloat(fracParts[0]) || 0) / (parseFloat(fracParts[1]) || 1);
+                }
+                return whole + fraction;
+            } else if (str.includes('/')) {
+                const parts = str.split('/');
+                return (parseFloat(parts[0]) || 0) / (parseFloat(parts[1]) || 1);
+            }
+            return parseFloat(str) || 0;
+        }
+
+        // Core Parse Engine & Cost Calculator (Pure JS Natural language extraction)
+        function calculateRecipeCost() {
+            const content = document.getElementById('recipeEditor').value;
+            const lines = content.split('\n');
+            const specList = document.getElementById('specItemsList');
+            specList.innerHTML = '';
+
+            let rawCostTotal = 0;
+            let yieldAdjustedTotal = 0;
+            let foundItems = false;
+
+            // Simple natural parsing expression supporting fractions and mixed fractions
+            const parsingPattern = /^([\d\/\s\.]+)\s*([a-zA-Z]+)?\s*(.+)$/;
+
+            lines.forEach((line) => {
+                line = line.trim();
+                if (!line) return;
+
+                if (line.toLowerCase().startsWith('method') || line.toLowerCase().startsWith('step') || /^\d+\./.test(line)) {
+                    return;
+                }
+
+                const match = line.match(parsingPattern);
+                if (match) {
+                    const parsedQty = parseFraction(match[1]);
+                    const parsedUnit = (match[2] || 'piece').toLowerCase().trim();
+                    const rawIngredientText = match[3].toLowerCase().trim();
+
+                    let pantryKey = null;
+                    Object.keys(pantry).forEach(key => {
+                        if (rawIngredientText.includes(key) || key.includes(rawIngredientText)) {
+                            pantryKey = key;
+                        }
+                    });
+
+                    if (pantryKey) {
+                        foundItems = true;
+                        const pantryItem = pantry[pantryKey];
+                        
+                        let unitScale = 1;
+                        const baseUnit = pantryItem.unit;
+
+                        if (unitConversions[baseUnit] && unitConversions[baseUnit][parsedUnit]) {
+                            unitScale = unitConversions[baseUnit][parsedUnit];
+                        } else if (parsedUnit !== baseUnit) {
+                            unitScale = 1; 
+                        }
+
+                        const targetQty = parsedQty * unitScale;
+                        const rawCost = targetQty * pantryItem.cost;
+                        const adjustedCost = rawCost / pantryItem.yield;
+
+                        rawCostTotal += rawCost;
+                        yieldAdjustedTotal += adjustedCost;
+
+                        const itemCard = document.createElement('div');
+                        itemCard.className = 'p-3 bg-navy-dark/40 border border-slateBorder rounded-lg flex justify-between items-center hover:border-teal/50 transition-colors';
+                        itemCard.innerHTML = `
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-bold text-white text-xs">${match[1].trim()} ${parsedUnit}</span>
+                                    <span class="text-gray-400">→</span>
+                                    <span class="text-teal font-medium font-mono">${pantryItem.name}</span>
+                                </div>
+                                <div class="text-[10px] text-gray-400 mt-1 flex space-x-2">
+                                    <span>Market Cost: ${formatCurrency(pantryItem.cost)}/${pantryItem.unit}</span>
+                                    <span>•</span>
+                                    <span>Yield: ${(pantryItem.yield * 100).toFixed(0)}%</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="font-bold text-white block">${formatCurrency(adjustedCost)}</span>
+                                <span class="text-[9px] text-gray-500 block">Raw: ${formatCurrency(rawCost)}</span>
+                            </div>
+                        `;
+                        specList.appendChild(itemCard);
+                    } else {
+                        foundItems = true;
+                        const itemCard = document.createElement('div');
+                        itemCard.className = 'p-2.5 bg-yellow-950/10 border border-yellow-900/30 rounded-lg flex justify-between items-center';
+                        itemCard.innerHTML = `
+                            <div class="flex items-center space-x-2">
+                                <span class="h-2 w-2 rounded-full bg-yellow-500"></span>
+                                <span class="text-yellow-300 font-semibold text-xs">${line}</span>
+                            </div>
+                            <button onclick="mapNewIngredient('${line}')" class="text-[9px] bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-300 border border-yellow-500/20 px-2 py-0.5 rounded font-bold transition-all">Map Unit</button>
+                        `;
+                        specList.appendChild(itemCard);
+                    }
+                }
+            });
+
+            if (!foundItems) {
+                specList.innerHTML = `<div class="text-center text-gray-500 mt-10 italic">Type details (e.g., "3 lbs veal") to align conversions.</div>`;
+            }
+
+            // Calculations Display
+            document.getElementById('rawTotalCost').innerText = formatCurrency(rawCostTotal);
+            document.getElementById('yieldAdjustedCost').innerText = formatCurrency(yieldAdjustedTotal);
+
+            const targetCostPct = parseFloat(document.getElementById('targetCostPct').value) || 28;
+            const suggestedPrice = yieldAdjustedTotal / (targetCostPct / 100);
+            document.getElementById('suggestedPlatePrice').innerText = formatCurrency(suggestedPrice);
+
+            let actualCostPct = (yieldAdjustedTotal / (suggestedPrice || 1)) * 100;
+            document.getElementById('calculatedFoodCostPct').innerText = actualCostPct.toFixed(1) + '%';
+            document.getElementById('lastParsedTime').innerText = `Sync: ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'})}`;
+
+            // Update Dynamic Balance Meter
+            updateBalanceMeter(actualCostPct, targetCostPct, foundItems);
+        }
+
+        // Active Balance Scale Indicator Logic (Visualizes "Bringing Balance")
+        function updateBalanceMeter(actualPct, targetPct, hasItems) {
+            const balanceContainer = document.getElementById('balanceContainer');
+            const balanceProgress = document.getElementById('balanceProgress');
+            const balanceBadge = document.getElementById('balanceBadge');
+            const balanceStatusText = document.getElementById('balanceStatusText');
+            const balanceIconContainer = document.getElementById('balanceIconContainer');
+            const balanceTitle = document.getElementById('balanceTitle');
+
+            if (!hasItems || actualPct === 0) {
+                balanceContainer.className = "bg-slateCard border border-slateBorder rounded-xl p-4 shadow-md";
+                balanceProgress.style.width = "0%";
+                balanceBadge.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-navy-light/40 text-gray-300";
+                balanceBadge.innerText = "Empty Workspace";
+                balanceStatusText.innerText = "Input ingredients to measure operational balance";
+                balanceIconContainer.className = "p-1.5 rounded bg-navy-light/40 text-gray-400";
+                balanceTitle.innerText = "Recipe Balance Matrix";
+                return;
+            }
+
+            // Calculate operational margin gap performance
+            const variance = actualPct - targetPct;
+            
+            // Set scale positioning (0% to 100%, 50% is perfect balance target)
+            let score = 50 - (variance * 2.5);
+            score = Math.max(10, Math.min(90, score));
+            balanceProgress.style.width = `${score}%`;
+
+            if (variance <= 0.5) {
+                // Aligned! Glowing Teal
+                balanceContainer.className = "bg-slateCard border border-teal/20 rounded-xl p-4 shadow-lg shadow-teal/5 transition-all duration-300";
+                balanceBadge.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-teal/10 text-teal font-bold";
+                balanceBadge.innerText = "Balanced";
+                balanceStatusText.innerText = `Aligned! Margin performance is optimized.`;
+                balanceIconContainer.className = "p-1.5 rounded bg-teal/10 text-teal animate-pulse";
+                balanceTitle.innerHTML = 'Recipe Balance Matrix <span class="text-teal-400">Aligned</span>';
+            } else if (variance <= 5) {
+                // At Risk! Warm Warning Orange
+                balanceContainer.className = "bg-slateCard border border-yellow-500/20 rounded-xl p-4 shadow-md";
+                balanceBadge.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 font-bold";
+                balanceBadge.innerText = "Warning Margin";
+                balanceStatusText.innerText = `Slightly above target goal of ${targetPct}%.`;
+                balanceIconContainer.className = "p-1.5 rounded bg-yellow-500/10 text-yellow-500";
+                balanceTitle.innerHTML = 'Recipe Balance Matrix <span class="text-yellow-400">At Risk</span>';
+            } else {
+                // Out of Balance! Red Alert
+                balanceContainer.className = "bg-slateCard border border-red-500/20 rounded-xl p-4 shadow-md shadow-red-500/5";
+                balanceBadge.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-500 font-bold";
+                balanceBadge.innerText = "Out of Balance";
+                balanceStatusText.innerText = `Alert: Food cost exceeds targeted threshold.`;
+                balanceIconContainer.className = "p-1.5 rounded bg-red-500/10 text-red-400";
+                balanceTitle.innerHTML = 'Recipe Balance Matrix <span class="text-red-400">Alert</span>';
+            }
+        }
+
+        // Direct Modal Mapping
+        function mapNewIngredient(textLine) {
+            const cleanText = textLine.replace(/[\d\/\s\.]+/g, '').trim().split(' ')[1] || 'new-ingredient';
+            pantry[cleanText] = { name: cleanText, cost: 4.50, unit: 'lb', yield: 1.00, source: 'Mapped Ingredient Source' };
+            renderPantryTable();
+            calculateRecipeCost();
+            appendSystemChatMessage(`Mapped new code '${cleanText}' to Universal Pantry.`);
+        }
+
+        // Toggle sync Modal
+        function toggleCloudSyncModal() {
+            const modal = document.getElementById('cloudSyncModal');
+            modal.classList.toggle('hidden');
+        }
+
+        function triggerCloudSync() {
+            toggleCloudSyncModal();
+            appendSystemChatMessage("MiseOS Kitchen Sync Initialized. Active Azure instance listening for multi-user alignment.");
+        }
+
+        // System feedback injector 
+        function appendSystemChatMessage(msg) {
+            const chatMessages = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'flex space-x-2 items-start';
+            div.innerHTML = `
+                <div class="h-6 w-6 rounded-full bg-navy-light/60 text-teal flex items-center justify-center text-[8px] font-bold flex-shrink-0">
+                    SYS
+                </div>
+                <div class="bg-navy-dark/40 p-3 rounded-lg border border-slateBorder text-gray-300 max-w-[85%] text-[11px] italic">
+                    <p class="font-semibold text-teal-300 mb-1">MiseOS Engine Alert</p>
+                    ${msg}
+                </div>
+            `;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Gemini AI Connection with robust exponential backoff retries
+        async function sendChatMessage() {
+            const chatInput = document.getElementById('chatInput');
+            const query = chatInput.value.trim();
+            if (!query) return;
+
+            // Render user message instantly
+            const chatMessages = document.getElementById('chatMessages');
+            const userDiv = document.createElement('div');
+            userDiv.className = 'flex space-x-2 items-start justify-end';
+            userDiv.innerHTML = `
+                <div class="bg-teal/10 p-3 rounded-lg border border-teal/20 text-gray-200 max-w-[85%]">
+                    <p class="font-semibold text-teal-200 mb-1 text-right">Chef Brian</p>
+                    ${query}
+                </div>
+                <div class="h-6 w-6 rounded-full bg-teal text-slateCanvas flex items-center justify-center text-[9px] font-bold flex-shrink-0">
+                    CH
+                </div>
+            `;
+            chatMessages.appendChild(userDiv);
+            chatInput.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Render Loading State
+            const loaderDiv = document.createElement('div');
+            loaderDiv.className = 'flex space-x-2 items-start';
+            loaderDiv.id = 'ai-loader-bubble';
+            loaderDiv.innerHTML = `
+                <div class="h-6 w-6 rounded-full bg-teal/15 text-teal flex items-center justify-center text-[9px] font-bold flex-shrink-0">
+                    AI
+                </div>
+                <div class="bg-navy-light/20 p-3 rounded-lg border border-slateBorder text-gray-300 max-w-[85%]">
+                    <span class="flex space-x-1 items-center">
+                        <span class="h-1.5 w-1.5 bg-teal rounded-full animate-bounce" style="animation-delay: 0s"></span>
+                        <span class="h-1.5 w-1.5 bg-teal rounded-full animate-bounce" style="animation-delay: 0.15s"></span>
+                        <span class="h-1.5 w-1.5 bg-teal rounded-full animate-bounce" style="animation-delay: 0.3s"></span>
+                    </span>
+                </div>
+            `;
+            chatMessages.appendChild(loaderDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Generate Prompt Context containing active Spec list
+            const activeRecipe = document.getElementById('recipeEditor').value;
+            const systemPrompt = `You are the MiseOS AI Sous-Chef. An elite culinary intelligence system engineered to assist Michelin-caliber and professional Executive Chefs with recipes, flavor pairings, seasonality logic, and yield optimization. Keep answers professional, concise, with highly clear formatting to respect a busy chef's timeline. Avoid any fluff.`;
+            
+            const userQueryWithContext = `Here is my current sandbox recipe spec:
+            \n\`\`\`\n${activeRecipe}\n\`\`\`\n
+            And my specific query: "${query}"`;
+
+            // Make the call to Gemini API
+            try {
+                const responseText = await callGeminiAPI(systemPrompt, userQueryWithContext);
+                
+                // Remove loader and append clean AI message
+                document.getElementById('ai-loader-bubble').remove();
+                
+                const responseDiv = document.createElement('div');
+                responseDiv.className = 'flex space-x-2 items-start';
+                responseDiv.innerHTML = `
+                    <div class="h-6 w-6 rounded-full bg-teal/15 text-teal flex items-center justify-center text-[9px] font-bold flex-shrink-0">
+                        AI
+                    </div>
+                    <div class="bg-navy-light/20 p-3 rounded-lg border border-slateBorder text-gray-300 max-w-[85%] whitespace-pre-wrap leading-relaxed">
+                        <p class="font-semibold text-white mb-1">MiseOS AI Sous-Chef</p>
+                        ${formatMarkdownText(responseText)}
+                    </div>
+                `;
+                chatMessages.appendChild(responseDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            } catch (error) {
+                document.getElementById('ai-loader-bubble').remove();
+                
+                // Show localized simulated response if network credentials/runtime API keys are absent
+                const mockResponse = getMockResponse(query, activeRecipe);
+                const fallbackDiv = document.createElement('div');
+                fallbackDiv.className = 'flex space-x-2 items-start';
+                fallbackDiv.innerHTML = `
+                    <div class="h-6 w-6 rounded-full bg-teal/15 text-teal flex items-center justify-center text-[9px] font-bold flex-shrink-0">
+                        AI
+                    </div>
+                    <div class="bg-navy-light/20 p-3 rounded-lg border border-slateBorder text-gray-300 max-w-[85%] leading-relaxed">
+                        <p class="font-semibold text-white mb-1">MiseOS AI Sous-Chef (Offline Mode)</p>
+                        ${mockResponse}
+                    </div>
+                `;
+                chatMessages.appendChild(fallbackDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+
+        // Gemini API Implementation with strict exponential backoff (retries up to 5 times)
+        async function callGeminiAPI(systemInstruction, userContent, retryCount = 0) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [
+                    {
+                        parts: [
+                            { text: userContent }
+                        ]
+                    }
+                ],
+                systemInstruction: {
+                    parts: [
+                        { text: systemInstruction }
+                    ]
+                }
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API returned status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response received.";
+
+            } catch (error) {
+                if (retryCount < 5) {
+                    const delay = Math.pow(2, retryCount) * 1000;
+                    return new Promise((resolve, reject) => {
+                        setTimeout(() => {
+                            callGeminiAPI(systemInstruction, userContent, retryCount + 1).then(resolve).catch(reject);
+                        }, delay);
+                    });
+                } else {
+                    throw error;
+                }
+            }
+        }
+
+        // Format raw markdown response to clean html lines
+        function formatMarkdownText(text) {
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/`([^`]+)`/g, '<code class="bg-navy-dark px-1.5 py-0.5 rounded font-mono text-teal">$1</code>')
+                .replace(/\n/g, '<br>');
+        }
+
+        // Offline Simulator to guarantee seamless interaction under any execution constraint
+        function getMockResponse(query, recipe) {
+            const q = query.toLowerCase();
+            if (q.includes('pair') || q.includes('comb') || q.includes('menu')) {
+                return `<strong>High-Margin Menu Suggestions:</strong><br>
+                - <strong>Appetizer:</strong> Pan-Roasted Sweetbreads with glazed ramps and brown-butter morel puree. Target Food Cost: 21%.<br>
+                - <strong>Entrée:</strong> Medallions of Veal Tenderloin, Ramp Bulb Soubise, Sautéed Spring Morels with ramp oil reduction. Target Food Cost: 26%.<br>
+                - <strong>Structural Balance Tip:</strong> Offset the high prime cost of veal by serving it alongside cauliflower-steak extensions or potato mousseline.`;
+            }
+            if (q.includes('cost') || q.includes('price') || q.includes('margin')) {
+                return `<strong>Costing Calibration Analysis:</strong><br>
+                - <strong>Veal Tenderloin:</strong> Yield adjust stands at 85% ($21.76 raw effective cost). Shrink trim to 5% by utilizing trim-pieces for stock or terrines.<br>
+                - <strong>Morel Mushrooms:</strong> At $28.00/lb, this represents your secondary prime cost element. Reduce portion size to 1.5 oz per plate to keep plate cost within targeted limits.`;
+            }
+            return `<strong>Executive Recipe Insight:</strong><br>
+            - Balance the herbaceous, garlicky profile of the local ramps against the earthy richness of morel mushrooms using an acidic component, such as a drop of sherry vinegar or verjus in your reduction cream.<br>
+            - Your current unit conversion configurations are mapped correctly in your database. Let me know if you would like alternative weight ratio profiles!`;
+        }
+    </script>
+</body>
+</html>
