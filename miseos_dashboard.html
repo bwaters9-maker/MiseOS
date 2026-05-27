@@ -79,7 +79,7 @@
             <!-- Universal Target Food Cost Goal Toggle -->
             <div class="flex items-center space-x-2 bg-navy-dark/60 px-3 py-2 rounded-lg border border-slateBorder text-xs">
                 <span class="text-gray-400">Target Margin Goal:</span>
-                <npm install -g tsx id="targetCostPct" type="number" value="28" class="w-8 bg-transparent text-teal font-bold focus:outline-none text-right" oninput="calculateRecipeCost()">
+                <input id="targetCostPct" type="number" value="28" class="w-8 bg-transparent text-teal font-bold focus:outline-none text-right" oninput="calculateRecipeCost()">
                 <span class="text-teal font-bold">%</span>
             </div>
 
@@ -399,8 +399,7 @@ const BACKEND_API_URL = "https://your-backend-service.onrender.com";
  * BRIAN: This function triggers when someone clicks "Sync Kitchen Cloud" on the screen.
  * It packages up what the chef typed and ships it over the internet to your backend container!
  */
-async function syncDashboar
-dToCloud() {
+async function syncDashboardToCloud() {
     // 1. Grab the text typed inside the Markdown Editor on the screen
     const rawText = document.getElementById('recipeEditor').value;
     const suggestedPrice = document.getElementById('suggestedPlatePrice').innerText;
@@ -429,7 +428,9 @@ dToCloud() {
         }
     } catch (error) {
         console.error("Connection failed:", error);
-        alert("❌ Could not reach your backend container server.")
+        alert("❌ Could not reach your backend container server.");
+    }
+}
         // Global State & Configuration
         const apiKey = ""; // Set empty string as mandated; runtime provides authorization
         let modelCallRetryDelay = 1000;
@@ -475,35 +476,35 @@ dToCloud() {
         // Render the Editable Universal Pantry Table
         function renderPantryTable() {
             const tbody = document.getElementById('pantryTableBody');
-            tbody.innerHTML = '';
+            let rowsHtml = ''; // Batch DOM updates via string accumulation
             
             Object.keys(pantry).forEach(key => {
                 const item = pantry[key];
-                const row = document.createElement('tr');
-                row.className = 'border-b border-slateBorder/60 hover:bg-navy-dark/20 text-xs transition-colors';
-                row.innerHTML = `
-                    <td class="py-2.5 font-mono text-teal font-semibold">${key}</td>
-                    <td class="py-2.5">
-                        <input type="number" step="0.01" value="${item.cost}" class="bg-slateCanvas border border-slateBorder rounded px-2 py-1 w-20 text-white font-mono" onchange="updatePantryItemCost('${key}', this.value)">
-                    </td>
-                    <td class="py-2.5">
-                        <select class="bg-slateCanvas border border-slateBorder rounded px-2 py-1 text-gray-300" onchange="updatePantryItemUnit('${key}', this.value)">
-                            <option value="lb" ${item.unit === 'lb' ? 'selected' : ''}>lb</option>
-                            <option value="bunch" ${item.unit === 'bunch' ? 'selected' : ''}>bunch</option>
-                            <option value="cup" ${item.unit === 'cup' ? 'selected' : ''}>cup</option>
-                            <option value="piece" ${item.unit === 'piece' ? 'selected' : ''}>piece</option>
-                        </select>
-                    </td>
-                    <td class="py-2.5">
-                        <input type="number" step="0.01" max="1" min="0.01" value="${item.yield}" class="bg-slateCanvas border border-slateBorder rounded px-2 py-1 w-16 text-white font-mono" onchange="updatePantryItemYield('${key}', this.value)">
-                    </td>
-                    <td class="py-2.5 text-gray-400">${item.source}</td>
-                    <td class="py-2.5 text-right">
-                        <button onclick="removePantryItem('${key}')" class="text-red-400 hover:text-red-300 font-semibold px-2 py-1">Delete</button>
-                    </td>
+                rowsHtml += `
+                    <tr class="border-b border-slateBorder/60 hover:bg-navy-dark/20 text-xs transition-colors">
+                        <td class="py-2.5 font-mono text-teal font-semibold">${key}</td>
+                        <td class="py-2.5">
+                            <input type="number" step="0.01" value="${item.cost}" class="bg-slateCanvas border border-slateBorder rounded px-2 py-1 w-20 text-white font-mono" onchange="updatePantryItemCost('${key}', this.value)">
+                        </td>
+                        <td class="py-2.5">
+                            <select class="bg-slateCanvas border border-slateBorder rounded px-2 py-1 text-gray-300" onchange="updatePantryItemUnit('${key}', this.value)">
+                                <option value="lb" ${item.unit === 'lb' ? 'selected' : ''}>lb</option>
+                                <option value="bunch" ${item.unit === 'bunch' ? 'selected' : ''}>bunch</option>
+                                <option value="cup" ${item.unit === 'cup' ? 'selected' : ''}>cup</option>
+                                <option value="piece" ${item.unit === 'piece' ? 'selected' : ''}>piece</option>
+                            </select>
+                        </td>
+                        <td class="py-2.5">
+                            <input type="number" step="0.01" max="1" min="0.01" value="${item.yield}" class="bg-slateCanvas border border-slateBorder rounded px-2 py-1 w-16 text-white font-mono" onchange="updatePantryItemYield('${key}', this.value)">
+                        </td>
+                        <td class="py-2.5 text-gray-400">${item.source}</td>
+                        <td class="py-2.5 text-right">
+                            <button onclick="removePantryItem('${key}')" class="text-red-400 hover:text-red-300 font-semibold px-2 py-1">Delete</button>
+                        </td>
+                    </tr>
                 `;
-                tbody.appendChild(row);
             });
+            tbody.innerHTML = rowsHtml;
         }
 
         // Pantry Mutations to Trigger Instant Workspace Refresh
@@ -612,7 +613,7 @@ dToCloud() {
             const content = document.getElementById('recipeEditor').value;
             const lines = content.split('\n');
             const specList = document.getElementById('specItemsList');
-            specList.innerHTML = '';
+            let specItemsHtml = ''; // Batch DOM updates via string accumulation
 
             let rawCostTotal = 0;
             let yieldAdjustedTotal = 0;
@@ -635,12 +636,10 @@ dToCloud() {
                     const parsedUnit = (match[2] || 'piece').toLowerCase().trim();
                     const rawIngredientText = match[3].toLowerCase().trim();
 
-                    let pantryKey = null;
-                    Object.keys(pantry).forEach(key => {
-                        if (rawIngredientText.includes(key) || key.includes(rawIngredientText)) {
-                            pantryKey = key;
-                        }
-                    });
+                    // Optimize: Using early-exit .find() instead of .forEach() for O(N) lookup
+                    const pantryKey = Object.keys(pantry).find(key =>
+                        rawIngredientText.includes(key) || key.includes(rawIngredientText)
+                    );
 
                     if (pantryKey) {
                         foundItems = true;
@@ -662,45 +661,45 @@ dToCloud() {
                         rawCostTotal += rawCost;
                         yieldAdjustedTotal += adjustedCost;
 
-                        const itemCard = document.createElement('div');
-                        itemCard.className = 'p-3 bg-navy-dark/40 border border-slateBorder rounded-lg flex justify-between items-center hover:border-teal/50 transition-colors';
-                        itemCard.innerHTML = `
-                            <div>
-                                <div class="flex items-center space-x-2">
-                                    <span class="font-bold text-white text-xs">${match[1].trim()} ${parsedUnit}</span>
-                                    <span class="text-gray-400">→</span>
-                                    <span class="text-teal font-medium font-mono">${pantryItem.name}</span>
+                        specItemsHtml += `
+                            <div class="p-3 bg-navy-dark/40 border border-slateBorder rounded-lg flex justify-between items-center hover:border-teal/50 transition-colors">
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-bold text-white text-xs">${match[1].trim()} ${parsedUnit}</span>
+                                        <span class="text-gray-400">→</span>
+                                        <span class="text-teal font-medium font-mono">${pantryItem.name}</span>
+                                    </div>
+                                    <div class="text-[10px] text-gray-400 mt-1 flex space-x-2">
+                                        <span>Market Cost: ${formatCurrency(pantryItem.cost)}/${pantryItem.unit}</span>
+                                        <span>•</span>
+                                        <span>Yield: ${(pantryItem.yield * 100).toFixed(0)}%</span>
+                                    </div>
                                 </div>
-                                <div class="text-[10px] text-gray-400 mt-1 flex space-x-2">
-                                    <span>Market Cost: ${formatCurrency(pantryItem.cost)}/${pantryItem.unit}</span>
-                                    <span>•</span>
-                                    <span>Yield: ${(pantryItem.yield * 100).toFixed(0)}%</span>
+                                <div class="text-right">
+                                    <span class="font-bold text-white block">${formatCurrency(adjustedCost)}</span>
+                                    <span class="text-[9px] text-gray-500 block">Raw: ${formatCurrency(rawCost)}</span>
                                 </div>
-                            </div>
-                            <div class="text-right">
-                                <span class="font-bold text-white block">${formatCurrency(adjustedCost)}</span>
-                                <span class="text-[9px] text-gray-500 block">Raw: ${formatCurrency(rawCost)}</span>
                             </div>
                         `;
-                        specList.appendChild(itemCard);
                     } else {
                         foundItems = true;
-                        const itemCard = document.createElement('div');
-                        itemCard.className = 'p-2.5 bg-yellow-950/10 border border-yellow-900/30 rounded-lg flex justify-between items-center';
-                        itemCard.innerHTML = `
-                            <div class="flex items-center space-x-2">
-                                <span class="h-2 w-2 rounded-full bg-yellow-500"></span>
-                                <span class="text-yellow-300 font-semibold text-xs">${line}</span>
+                        specItemsHtml += `
+                            <div class="p-2.5 bg-yellow-950/10 border border-yellow-900/30 rounded-lg flex justify-between items-center">
+                                <div class="flex items-center space-x-2">
+                                    <span class="h-2 w-2 rounded-full bg-yellow-500"></span>
+                                    <span class="text-yellow-300 font-semibold text-xs">${line}</span>
+                                </div>
+                                <button onclick="mapNewIngredient('${line}')" class="text-[9px] bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-300 border border-yellow-500/20 px-2 py-0.5 rounded font-bold transition-all">Map Unit</button>
                             </div>
-                            <button onclick="mapNewIngredient('${line}')" class="text-[9px] bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-300 border border-yellow-500/20 px-2 py-0.5 rounded font-bold transition-all">Map Unit</button>
                         `;
-                        specList.appendChild(itemCard);
                     }
                 }
             });
 
             if (!foundItems) {
                 specList.innerHTML = `<div class="text-center text-gray-500 mt-10 italic">Type details (e.g., "3 lbs veal") to align conversions.</div>`;
+            } else {
+                specList.innerHTML = specItemsHtml;
             }
 
             // Calculations Display
