@@ -79,7 +79,7 @@
             <!-- Universal Target Food Cost Goal Toggle -->
             <div class="flex items-center space-x-2 bg-navy-dark/60 px-3 py-2 rounded-lg border border-slateBorder text-xs">
                 <span class="text-gray-400">Target Margin Goal:</span>
-                <npm install -g tsx id="targetCostPct" type="number" value="28" class="w-8 bg-transparent text-teal font-bold focus:outline-none text-right" oninput="calculateRecipeCost()">
+                <input id="targetCostPct" type="number" value="28" class="w-8 bg-transparent text-teal font-bold focus:outline-none text-right" oninput="calculateRecipeCost()">
                 <span class="text-teal font-bold">%</span>
             </div>
 
@@ -399,8 +399,7 @@ const BACKEND_API_URL = "https://your-backend-service.onrender.com";
  * BRIAN: This function triggers when someone clicks "Sync Kitchen Cloud" on the screen.
  * It packages up what the chef typed and ships it over the internet to your backend container!
  */
-async function syncDashboar
-dToCloud() {
+async function syncDashboardToCloud() {
     // 1. Grab the text typed inside the Markdown Editor on the screen
     const rawText = document.getElementById('recipeEditor').value;
     const suggestedPrice = document.getElementById('suggestedPlatePrice').innerText;
@@ -430,8 +429,11 @@ dToCloud() {
     } catch (error) {
         console.error("Connection failed:", error);
         alert("❌ Could not reach your backend container server.")
-        // Global State & Configuration
-        const apiKey = ""; // Set empty string as mandated; runtime provides authorization
+    }
+}
+
+// Global State & Configuration
+const apiKey = ""; // Set empty string as mandated; runtime provides authorization
         let modelCallRetryDelay = 1000;
 
         // Base universal pantry database
@@ -608,15 +610,17 @@ dToCloud() {
         }
 
         // Core Parse Engine & Cost Calculator (Pure JS Natural language extraction)
+        // BOLT OPTIMIZATION: Switched to early-exit search (.find) and batched DOM updates via string accumulation
+        // to minimize reflows and unnecessary iterations during real-time typing.
         function calculateRecipeCost() {
             const content = document.getElementById('recipeEditor').value;
             const lines = content.split('\n');
             const specList = document.getElementById('specItemsList');
-            specList.innerHTML = '';
 
             let rawCostTotal = 0;
             let yieldAdjustedTotal = 0;
             let foundItems = false;
+            let itemsHtmlAccumulator = '';
 
             // Simple natural parsing expression supporting fractions and mixed fractions
             const parsingPattern = /^([\d\/\s\.]+)\s*([a-zA-Z]+)?\s*(.+)$/;
@@ -635,12 +639,10 @@ dToCloud() {
                     const parsedUnit = (match[2] || 'piece').toLowerCase().trim();
                     const rawIngredientText = match[3].toLowerCase().trim();
 
-                    let pantryKey = null;
-                    Object.keys(pantry).forEach(key => {
-                        if (rawIngredientText.includes(key) || key.includes(rawIngredientText)) {
-                            pantryKey = key;
-                        }
-                    });
+                    // BOLT: Using .find() instead of .forEach() for O(N) early exit on match
+                    const pantryKey = Object.keys(pantry).find(key =>
+                        rawIngredientText.includes(key) || key.includes(rawIngredientText)
+                    );
 
                     if (pantryKey) {
                         foundItems = true;
@@ -662,45 +664,45 @@ dToCloud() {
                         rawCostTotal += rawCost;
                         yieldAdjustedTotal += adjustedCost;
 
-                        const itemCard = document.createElement('div');
-                        itemCard.className = 'p-3 bg-navy-dark/40 border border-slateBorder rounded-lg flex justify-between items-center hover:border-teal/50 transition-colors';
-                        itemCard.innerHTML = `
-                            <div>
-                                <div class="flex items-center space-x-2">
-                                    <span class="font-bold text-white text-xs">${match[1].trim()} ${parsedUnit}</span>
-                                    <span class="text-gray-400">→</span>
-                                    <span class="text-teal font-medium font-mono">${pantryItem.name}</span>
+                        // BOLT: Accumulating HTML string instead of immediate DOM injection
+                        itemsHtmlAccumulator += `
+                            <div class="p-3 bg-navy-dark/40 border border-slateBorder rounded-lg flex justify-between items-center hover:border-teal/50 transition-colors">
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-bold text-white text-xs">${match[1].trim()} ${parsedUnit}</span>
+                                        <span class="text-gray-400">→</span>
+                                        <span class="text-teal font-medium font-mono">${pantryItem.name}</span>
+                                    </div>
+                                    <div class="text-[10px] text-gray-400 mt-1 flex space-x-2">
+                                        <span>Market Cost: ${formatCurrency(pantryItem.cost)}/${pantryItem.unit}</span>
+                                        <span>•</span>
+                                        <span>Yield: ${(pantryItem.yield * 100).toFixed(0)}%</span>
+                                    </div>
                                 </div>
-                                <div class="text-[10px] text-gray-400 mt-1 flex space-x-2">
-                                    <span>Market Cost: ${formatCurrency(pantryItem.cost)}/${pantryItem.unit}</span>
-                                    <span>•</span>
-                                    <span>Yield: ${(pantryItem.yield * 100).toFixed(0)}%</span>
+                                <div class="text-right">
+                                    <span class="font-bold text-white block">${formatCurrency(adjustedCost)}</span>
+                                    <span class="text-[9px] text-gray-500 block">Raw: ${formatCurrency(rawCost)}</span>
                                 </div>
-                            </div>
-                            <div class="text-right">
-                                <span class="font-bold text-white block">${formatCurrency(adjustedCost)}</span>
-                                <span class="text-[9px] text-gray-500 block">Raw: ${formatCurrency(rawCost)}</span>
-                            </div>
-                        `;
-                        specList.appendChild(itemCard);
+                            </div>`;
                     } else {
                         foundItems = true;
-                        const itemCard = document.createElement('div');
-                        itemCard.className = 'p-2.5 bg-yellow-950/10 border border-yellow-900/30 rounded-lg flex justify-between items-center';
-                        itemCard.innerHTML = `
-                            <div class="flex items-center space-x-2">
-                                <span class="h-2 w-2 rounded-full bg-yellow-500"></span>
-                                <span class="text-yellow-300 font-semibold text-xs">${line}</span>
-                            </div>
-                            <button onclick="mapNewIngredient('${line}')" class="text-[9px] bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-300 border border-yellow-500/20 px-2 py-0.5 rounded font-bold transition-all">Map Unit</button>
-                        `;
-                        specList.appendChild(itemCard);
+                        itemsHtmlAccumulator += `
+                            <div class="p-2.5 bg-yellow-950/10 border border-yellow-900/30 rounded-lg flex justify-between items-center">
+                                <div class="flex items-center space-x-2">
+                                    <span class="h-2 w-2 rounded-full bg-yellow-500"></span>
+                                    <span class="text-yellow-300 font-semibold text-xs">${line}</span>
+                                </div>
+                                <button onclick="mapNewIngredient('${line}')" class="text-[9px] bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-300 border border-yellow-500/20 px-2 py-0.5 rounded font-bold transition-all">Map Unit</button>
+                            </div>`;
                     }
                 }
             });
 
             if (!foundItems) {
                 specList.innerHTML = `<div class="text-center text-gray-500 mt-10 italic">Type details (e.g., "3 lbs veal") to align conversions.</div>`;
+            } else {
+                // BOLT: Final single DOM update for the entire list
+                specList.innerHTML = itemsHtmlAccumulator;
             }
 
             // Calculations Display
