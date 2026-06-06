@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "func start",
-    "build": "tsc",
+    "build": "echo \"Build skipped: Standalone HTML dashboard\"",
     "start": "func start"
   },
   "dependencies": {
