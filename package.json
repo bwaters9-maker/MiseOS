@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "func start",
-    "build": "tsc",
+    "build": "echo 'No-op build'",
     "start": "func start"
   },
   "dependencies": {
