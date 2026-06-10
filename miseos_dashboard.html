@@ -79,7 +79,7 @@
             <!-- Universal Target Food Cost Goal Toggle -->
             <div class="flex items-center space-x-2 bg-navy-dark/60 px-3 py-2 rounded-lg border border-slateBorder text-xs">
                 <span class="text-gray-400">Target Margin Goal:</span>
-                <npm install -g tsx id="targetCostPct" type="number" value="28" class="w-8 bg-transparent text-teal font-bold focus:outline-none text-right" oninput="calculateRecipeCost()">
+                <input id="targetCostPct" type="number" value="28" class="w-8 bg-transparent text-teal font-bold focus:outline-none text-right" oninput="calculateRecipeCost()">
                 <span class="text-teal font-bold">%</span>
             </div>
 
@@ -399,8 +399,7 @@ const BACKEND_API_URL = "https://your-backend-service.onrender.com";
  * BRIAN: This function triggers when someone clicks "Sync Kitchen Cloud" on the screen.
  * It packages up what the chef typed and ships it over the internet to your backend container!
  */
-async function syncDashboar
-dToCloud() {
+async function syncDashboardToCloud() {
     // 1. Grab the text typed inside the Markdown Editor on the screen
     const rawText = document.getElementById('recipeEditor').value;
     const suggestedPrice = document.getElementById('suggestedPlatePrice').innerText;
@@ -430,6 +429,9 @@ dToCloud() {
     } catch (error) {
         console.error("Connection failed:", error);
         alert("❌ Could not reach your backend container server.")
+    }
+}
+
         // Global State & Configuration
         const apiKey = ""; // Set empty string as mandated; runtime provides authorization
         let modelCallRetryDelay = 1000;
@@ -467,9 +469,12 @@ dToCloud() {
             loadDemoRecipe('veal');
         };
 
+        // Optimization: Global formatter to avoid redundant object initialization
+        const currencyFormatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
         // Helper: Format currency
         function formatCurrency(val) {
-            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
+            return currencyFormatter.format(val);
         }
 
         // Render the Editable Universal Pantry Table
