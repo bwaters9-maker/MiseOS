@@ -1,20 +1,7 @@
 {
-  "name": "miseos-backend",
+  "name": "miseos-root",
   "version": "1.0.0",
-  "description": "Backend API for MiseOS",
-  "type": "commonjs",
-  "main": "dist/index.js",
   "scripts": {
-    "dev": "func start",
-    "build": "tsc",
-    "start": "func start"
-  },
-  "dependencies": {
-    "@azure/cosmos": "^4.9.3"
-  },
-  "devDependencies": {
-    "@azure/functions": "^4.x",
-    "@types/node": "^25.9.1",
-    "typescript": "^6.0.3"
+    "build": "echo 'No build step required for root'"
   }
 }
