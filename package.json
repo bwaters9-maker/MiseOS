@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "func start",
-    "build": "tsc",
+    "build": "echo 'No build step required for this project structure.'",
     "start": "func start"
   },
   "dependencies": {
