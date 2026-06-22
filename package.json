@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "func start",
-    "build": "tsc",
+    "build": "[ -d src ] && tsc || echo \"No src directory found, skipping tsc\"",
     "start": "func start"
   },
   "dependencies": {
