@@ -279,7 +279,7 @@
                     </div>
                     <div class="flex items-center space-x-2">
                         <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-                        <span class="text-[9px] text-gray-400 font-mono font-semibold">Gemini 2.5 Active</span>
+                        <span class="text-[9px] text-gray-400 font-mono font-semibold">Gemini 3.5 Active</span>
                     </div>
                 </div>
 
@@ -906,7 +906,7 @@ dToCloud() {
 
         // Gemini API Implementation with strict exponential backoff (retries up to 5 times)
         async function callGeminiAPI(systemInstruction, userContent, retryCount = 0) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`;
             
             const payload = {
                 contents: [
