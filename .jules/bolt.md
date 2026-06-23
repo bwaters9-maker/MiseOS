@@ -7,3 +7,6 @@
 ## 2026-06-23 - [Final Verification and JSON repair]
 **Learning:** Malformed JSON in configuration files like package.json can silently break tooling. Flattening redundant nested objects restores expected behavior.
 **Action:** Always validate JSON structure after manual edits.
+## 2026-06-23 - [Fixing CI Build Failure]
+**Learning:** CI pipelines that run automated build scripts (like 'npm run build') will fail if the underlying source files (e.g., a 'src' directory for TypeScript) are missing. Consolidated projects should have conditional build scripts.
+**Action:** Updated root package.json to conditionally skip 'tsc' if 'src' is absent.
